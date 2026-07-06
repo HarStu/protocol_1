@@ -45,7 +45,56 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    function collectHeadings() {
+    // the document maintains its own hand-authored "Full Table of Contents" (a nested
+    // <ul> of <a href="#slug">) that reflects the author's intended outline. That's a
+    // better nesting to show than raw h1/h2/h3 tags: almost everything in the actual
+    // body is an <h1> regardless of how deeply it's conceptually nested, so tag-based
+    // indentation barely nests at all. Parse that list for the tree; fall back to a
+    // flat h1/h2/h3 scan if it's ever missing (e.g. upstream renames/removes it).
+    function parseTocList(ul) {
+        var out = [];
+        var lis = ul.querySelectorAll(":scope > li");
+        lis.forEach(function (li) {
+            var a = li.querySelector(":scope > a");
+            if (!a) return;
+            var hrefTarget = (a.getAttribute("href") || "").replace(/^#/, "");
+            if (!hrefTarget) return;
+            var targetEl = document.getElementById(hrefTarget);
+            if (!targetEl) return; // dangling link (e.g. a since-renamed section); skip it
+            var headingEl = targetEl.closest("h1, h2, h3, h4, h5, h6") || targetEl;
+            var text = a.textContent.replace(/\s+/g, " ").trim();
+            if (!text) return;
+            var childUl = li.querySelector(":scope > ul");
+            out.push({
+                el: headingEl,
+                id: hrefTarget,
+                key: hrefTarget,
+                text: text,
+                children: childUl ? parseTocList(childUl) : []
+            });
+        });
+        return out;
+    }
+
+    function flattenToc(nodes, depth, out) {
+        nodes.forEach(function (node) {
+            out.push({ el: node.el, id: node.id, key: node.key, text: node.text, depth: depth });
+            if (node.children.length) flattenToc(node.children, depth + 1, out);
+        });
+        return out;
+    }
+
+    function collectHeadingsFromToc() {
+        var tocAnchor = document.getElementById("full-table-of-contents");
+        var tocHeading = tocAnchor && tocAnchor.closest("h1, h2, h3, h4, h5, h6");
+        var rootUl = tocHeading && tocHeading.nextElementSibling;
+        if (!rootUl || rootUl.tagName !== "UL") return null;
+        var tree = parseTocList(rootUl);
+        if (!tree.length) return null;
+        return flattenToc(tree, 0, []);
+    }
+
+    function collectHeadingsFallback() {
         var nodes = document.querySelectorAll("h1, h2, h3");
         var items = [];
         for (var i = 0; i < nodes.length; i++) {
@@ -57,12 +106,13 @@
             var text = el.textContent.replace(/\s+/g, " ").trim();
             if (!text) continue;
             var key = id || ("pos-" + i + "-" + text.slice(0, 40));
-            items.push({ el: el, level: el.tagName.toLowerCase(), text: text, id: id, key: key });
+            var depth = el.tagName === "H1" ? 0 : el.tagName === "H2" ? 1 : 2;
+            items.push({ el: el, depth: depth, text: text, id: id, key: key });
         }
         return items;
     }
 
-    var headings = collectHeadings();
+    var headings = collectHeadingsFromToc() || collectHeadingsFallback();
     var headingByKey = {};
     headings.forEach(function (h) { headingByKey[h.key] = h; });
 
@@ -146,7 +196,8 @@
 
     function renderRow(item) {
         var li = document.createElement("li");
-        li.className = "fork-toc-item fork-level-" + item.level;
+        li.className = "fork-toc-item" + (item.depth > 0 ? " fork-child" : "");
+        li.style.paddingLeft = (1 + item.depth * 0.7) + "rem";
         li.dataset.key = item.key;
 
         var favBtn = document.createElement("button");

@@ -186,8 +186,10 @@
 }
 .fork-toc-item:hover { background: rgba(128, 128, 128, 0.12); }
 .fork-toc-item.fork-current { background: rgba(128, 128, 128, 0.2); }
-.fork-toc-item.fork-level-h2 { padding-left: 1.8em; font-size: 0.93em; }
-.fork-toc-item.fork-level-h3 { padding-left: 2.6em; font-size: 0.88em; opacity: 0.9; }
+/* indentation itself is set inline per-row (depth comes from the document's own
+   Full Table of Contents, which can nest arbitrarily deep); this just dims nested
+   entries a bit regardless of how deep they are */
+.fork-toc-item.fork-child { font-size: 0.93em; opacity: 0.92; }
 
 .fork-fav-btn, .fork-read-btn, .fork-list-btn {
     background: none;
