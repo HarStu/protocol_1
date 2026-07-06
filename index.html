@@ -52747,9 +52747,8 @@ Start Guide)</a>]</p>
 
 #fork-sidebar-toggle {
     position: fixed;
-    top: 2%;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 4.5em;
+    left: 2%;
     z-index: 10000;
     background: var(--bg);
     color: var(--text);
@@ -52841,20 +52840,18 @@ Start Guide)</a>]</p>
     color: var(--link);
 }
 
-#fork-add-favs-to-reading {
-    margin: 0 1em 0.5em;
-    font-size: 0.8em;
-    padding: 0.3em 0.6em;
-    background: transparent;
-    color: inherit;
-    border: 1px dashed rgba(128, 128, 128, 0.5);
+#fork-sidebar-disclaimer {
+    margin: 0 1em 0.6em;
+    padding: 0.6em 0.7em;
+    font-size: 0.78em;
+    line-height: 1.35;
+    opacity: 0.8;
+    background: rgba(128, 128, 128, 0.12);
+    border: 1px solid rgba(128, 128, 128, 0.3);
     border-radius: 4px;
-    cursor: pointer;
-    display: none;
     flex: 0 0 auto;
-    align-self: flex-start;
-    margin-left: 1em;
 }
+#fork-sidebar-disclaimer a { color: var(--link); }
 
 #fork-sidebar-progress {
     padding: 0 1em 0.5em;
@@ -52938,7 +52935,7 @@ Start Guide)</a>]</p>
 }
 
 @media screen and (max-width: 700px) {
-    #fork-sidebar-toggle { left: 2%; transform: none; top: auto; bottom: 3%; }
+    #fork-sidebar-toggle { left: 2%; top: auto; bottom: 3%; }
 }
 
 </style>
@@ -53021,13 +53018,15 @@ Start Guide)</a>]</p>
     sidebar.innerHTML =
         '<div id="fork-sidebar-header"><strong>Sections</strong>' +
         '<button id="fork-sidebar-close" aria-label="Close">×</button></div>' +
+        '<div id="fork-sidebar-disclaimer">This is a fan-made quality-of-life fork, not the ' +
+        'original document. <a href="https://meditationbook.page/" target="_blank" rel="noopener">' +
+        "See the original here.</a></div>" +
         '<input id="fork-sidebar-search" type="search" placeholder="Filter sections…">' +
         '<div id="fork-sidebar-tabs">' +
         '<button data-tab="all" class="active">All</button>' +
         '<button data-tab="favorites">★ Favorites</button>' +
         '<button data-tab="reading">Reading List</button>' +
         "</div>" +
-        '<button id="fork-add-favs-to-reading">+ add unread favorites</button>' +
         '<div id="fork-sidebar-progress"></div>' +
         '<div id="fork-palette-picker"><span>Theme:</span>' +
         '<button class="fork-swatch fork-swatch-default" data-palette="default" title="Default"></button>' +
@@ -53158,25 +53157,14 @@ Start Guide)</a>]</p>
         saveState();
         rerender();
     }
-    function addUnreadFavoritesToReadingList() {
-        Object.keys(state.favorites).forEach(function (k) {
-            if (state.readingList.indexOf(k) === -1 && !state.read[k]) state.readingList.push(k);
-        });
-        saveState();
-        rerender();
-    }
-
     var tabButtons = sidebar.querySelectorAll("#fork-sidebar-tabs button");
-    var addFavsBtn = document.getElementById("fork-add-favs-to-reading");
     tabButtons.forEach(function (btn) {
         btn.onclick = function () {
             currentTab = btn.dataset.tab;
             tabButtons.forEach(function (b) { b.classList.toggle("active", b === btn); });
-            addFavsBtn.style.display = currentTab === "reading" ? "block" : "none";
             rerender();
         };
     });
-    addFavsBtn.onclick = addUnreadFavoritesToReadingList;
 
     document.getElementById("fork-sidebar-search").addEventListener("input", function (e) {
         searchQuery = e.target.value.trim().toLowerCase();
@@ -53185,7 +53173,7 @@ Start Guide)</a>]</p>
 
     rerender();
 
-    // ---- scroll tracking: highlight current section + auto-mark as read ----
+    // ---- scroll tracking: highlight current section only (read-tracking is manual, via the ✓ button) ----
     function findRow(key) {
         var rows = document.getElementById("fork-toc-list").children;
         for (var i = 0; i < rows.length; i++) {
@@ -53200,26 +53188,13 @@ Start Guide)</a>]</p>
             entries.forEach(function (entry) {
                 if (!entry.isIntersecting) return;
                 var item = headings.find(function (h) { return h.el === entry.target; });
-                if (!item) return;
+                if (!item || lastCurrentKey === item.key) return;
 
-                if (lastCurrentKey !== item.key) {
-                    var prevRow = lastCurrentKey && findRow(lastCurrentKey);
-                    if (prevRow) prevRow.classList.remove("fork-current");
-                    lastCurrentKey = item.key;
-                    var row = findRow(item.key);
-                    if (row) row.classList.add("fork-current");
-                }
-
-                if (!state.read[item.key]) {
-                    state.read[item.key] = true;
-                    saveState();
-                    var readRow = findRow(item.key);
-                    if (readRow) {
-                        var btn = readRow.querySelector(".fork-read-btn");
-                        if (btn) btn.textContent = "✓";
-                    }
-                    updateProgress();
-                }
+                var prevRow = lastCurrentKey && findRow(lastCurrentKey);
+                if (prevRow) prevRow.classList.remove("fork-current");
+                lastCurrentKey = item.key;
+                var row = findRow(item.key);
+                if (row) row.classList.add("fork-current");
             });
         }, { rootMargin: "0px 0px -75% 0px", threshold: 0 });
 
