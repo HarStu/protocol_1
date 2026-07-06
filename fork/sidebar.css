@@ -61,6 +61,9 @@
     transition: transform 0.25s ease;
     display: flex;
     flex-direction: column;
+    /* single source of truth for the vertical rhythm between the sections below,
+       instead of each one carrying its own ad-hoc margin */
+    gap: 0.8em;
     font-size: 0.92rem;
 }
 #fork-sidebar.fork-open { transform: translateX(0); }
@@ -68,7 +71,7 @@
 #fork-sidebar-header {
     display: flex;
     align-items: center;
-    padding: 0.8em 1rem 0.4em 3.4rem;
+    padding: 0.8em 1rem 0.6em 3.4rem;
     /* generous enough to clear #fork-sidebar-toggle (viewport-fixed at top: 2%) for any
        realistic window height; vertical padding percentages can't be matched to it
        directly since they resolve against width, not height */
@@ -82,7 +85,7 @@
 #fork-sidebar-search {
     display: block;
     width: calc(100% - 2rem);
-    margin: 0.6em 1rem;
+    margin: 0 1rem;
     padding: 0.4em 0.6em;
     background: transparent;
     border: 1px solid rgba(128, 128, 128, 0.3);
@@ -92,10 +95,19 @@
     flex: 0 0 auto;
 }
 
+#fork-sidebar-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding-bottom: 0.6em;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+    flex: 0 0 auto;
+}
+
 #fork-sidebar-tabs {
     display: flex;
     gap: 0.3em;
-    padding: 0 1rem 0.4em;
+    padding: 0 1rem;
     flex-wrap: wrap;
     flex: 0 0 auto;
 }
@@ -117,7 +129,7 @@
 
 #fork-sidebar-disclaimer {
     width: calc(100% - 2rem);
-    margin: 0 1rem 0.6em;
+    margin: 0 1rem;
     padding: 0.6em 0.7em;
     font-size: 0.78em;
     line-height: 1.35;
@@ -130,7 +142,7 @@
 #fork-sidebar-disclaimer a { color: var(--link); }
 
 #fork-sidebar-progress {
-    padding: 0 1rem 0.5em;
+    padding: 0 1rem;
     font-size: 0.8em;
     opacity: 0.7;
     flex: 0 0 auto;
@@ -140,9 +152,8 @@
     display: flex;
     align-items: center;
     gap: 0.45em;
-    padding: 0 1rem 0.6em;
+    padding: 0 1rem;
     font-size: 0.8em;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
     flex: 0 0 auto;
 }
 .fork-swatch {
@@ -163,7 +174,7 @@
 #fork-toc-list {
     list-style: none;
     margin: 0;
-    padding: 0.4em 0 2em;
+    padding: 0 0 2em;
     overflow-y: auto;
     flex: 1 1 auto;
 }

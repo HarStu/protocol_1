@@ -52804,6 +52804,9 @@ Start Guide)</a>]</p>
     transition: transform 0.25s ease;
     display: flex;
     flex-direction: column;
+    /* single source of truth for the vertical rhythm between the sections below,
+       instead of each one carrying its own ad-hoc margin */
+    gap: 0.8em;
     font-size: 0.92rem;
 }
 #fork-sidebar.fork-open { transform: translateX(0); }
@@ -52811,7 +52814,7 @@ Start Guide)</a>]</p>
 #fork-sidebar-header {
     display: flex;
     align-items: center;
-    padding: 0.8em 1rem 0.4em 3.4rem;
+    padding: 0.8em 1rem 0.6em 3.4rem;
     /* generous enough to clear #fork-sidebar-toggle (viewport-fixed at top: 2%) for any
        realistic window height; vertical padding percentages can't be matched to it
        directly since they resolve against width, not height */
@@ -52825,7 +52828,7 @@ Start Guide)</a>]</p>
 #fork-sidebar-search {
     display: block;
     width: calc(100% - 2rem);
-    margin: 0.6em 1rem;
+    margin: 0 1rem;
     padding: 0.4em 0.6em;
     background: transparent;
     border: 1px solid rgba(128, 128, 128, 0.3);
@@ -52835,10 +52838,19 @@ Start Guide)</a>]</p>
     flex: 0 0 auto;
 }
 
+#fork-sidebar-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding-bottom: 0.6em;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+    flex: 0 0 auto;
+}
+
 #fork-sidebar-tabs {
     display: flex;
     gap: 0.3em;
-    padding: 0 1rem 0.4em;
+    padding: 0 1rem;
     flex-wrap: wrap;
     flex: 0 0 auto;
 }
@@ -52860,7 +52872,7 @@ Start Guide)</a>]</p>
 
 #fork-sidebar-disclaimer {
     width: calc(100% - 2rem);
-    margin: 0 1rem 0.6em;
+    margin: 0 1rem;
     padding: 0.6em 0.7em;
     font-size: 0.78em;
     line-height: 1.35;
@@ -52873,7 +52885,7 @@ Start Guide)</a>]</p>
 #fork-sidebar-disclaimer a { color: var(--link); }
 
 #fork-sidebar-progress {
-    padding: 0 1rem 0.5em;
+    padding: 0 1rem;
     font-size: 0.8em;
     opacity: 0.7;
     flex: 0 0 auto;
@@ -52883,9 +52895,8 @@ Start Guide)</a>]</p>
     display: flex;
     align-items: center;
     gap: 0.45em;
-    padding: 0 1rem 0.6em;
+    padding: 0 1rem;
     font-size: 0.8em;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
     flex: 0 0 auto;
 }
 .fork-swatch {
@@ -52906,7 +52917,7 @@ Start Guide)</a>]</p>
 #fork-toc-list {
     list-style: none;
     margin: 0;
-    padding: 0.4em 0 2em;
+    padding: 0 0 2em;
     overflow-y: auto;
     flex: 1 1 auto;
 }
@@ -53048,6 +53059,7 @@ Start Guide)</a>]</p>
         '<a href="https://meditationbook.page/" target="_blank" rel="noopener">original document</a>. ' +
         'All credit to "meditationstuff" and collaborators.</div>' +
         '<input id="fork-sidebar-search" type="search" placeholder="Filter sections…">' +
+        '<div id="fork-sidebar-controls">' +
         '<div id="fork-sidebar-tabs">' +
         '<button data-tab="all" class="active">All</button>' +
         '<button data-tab="favorites">★ Favorites</button>' +
@@ -53060,6 +53072,7 @@ Start Guide)</a>]</p>
         '<button class="fork-swatch fork-swatch-slate" data-palette="slate" title="Slate"></button>' +
         '<button class="fork-swatch fork-swatch-forest" data-palette="forest" title="Forest"></button>' +
         '<button class="fork-swatch fork-swatch-rose" data-palette="rose" title="Rose"></button>' +
+        "</div>" +
         "</div>" +
         '<ul id="fork-toc-list"></ul>';
     document.body.appendChild(sidebar);

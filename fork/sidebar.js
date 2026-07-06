@@ -85,6 +85,7 @@
         '<a href="https://meditationbook.page/" target="_blank" rel="noopener">original document</a>. ' +
         'All credit to "meditationstuff" and collaborators.</div>' +
         '<input id="fork-sidebar-search" type="search" placeholder="Filter sections…">' +
+        '<div id="fork-sidebar-controls">' +
         '<div id="fork-sidebar-tabs">' +
         '<button data-tab="all" class="active">All</button>' +
         '<button data-tab="favorites">★ Favorites</button>' +
@@ -97,6 +98,7 @@
         '<button class="fork-swatch fork-swatch-slate" data-palette="slate" title="Slate"></button>' +
         '<button class="fork-swatch fork-swatch-forest" data-palette="forest" title="Forest"></button>' +
         '<button class="fork-swatch fork-swatch-rose" data-palette="rose" title="Rose"></button>' +
+        "</div>" +
         "</div>" +
         '<ul id="fork-toc-list"></ul>';
     document.body.appendChild(sidebar);
