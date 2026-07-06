@@ -2,6 +2,11 @@
    injected as-is into the built index.html; kept out of header.html/m.sh so upstream
    merges never touch this file. */
 
+#fork-sidebar, #fork-sidebar *, #fork-sidebar *::before, #fork-sidebar *::after,
+#fork-sidebar-toggle {
+    box-sizing: border-box;
+}
+
 .fork-icon-btn {
     display: flex;
     align-items: center;
@@ -10,7 +15,7 @@
     height: 38px;
     background: var(--bg);
     color: var(--text);
-    border: 1px solid currentColor;
+    border: none;
     border-radius: 6px;
     padding: 0;
     cursor: pointer;
@@ -21,9 +26,15 @@
 
 #fork-sidebar-toggle {
     position: fixed;
-    top: 4.5em;
+    top: 2%;
     left: 2%;
     z-index: 10000;
+}
+
+/* header.html's donate button has no <meta> partner to coordinate with, so we
+   nudge it aside here rather than edit header.html (keeps upstream merges clean). */
+.paypal-button {
+    left: calc(2% + 50px);
 }
 
 #fork-sidebar-backdrop {
@@ -57,17 +68,24 @@
 #fork-sidebar-header {
     display: flex;
     align-items: center;
-    gap: 0.6em;
-    padding: 0.8em 1em 0.4em;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    padding: 0.8em 1rem 0.4em 3.4rem;
+    /* generous enough to clear #fork-sidebar-toggle (viewport-fixed at top: 2%) for any
+       realistic window height; vertical padding percentages can't be matched to it
+       directly since they resolve against width, not height */
+    min-height: 72px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
     flex: 0 0 auto;
 }
 
+/* horizontal spacing below is in rem (not em) so it lines up exactly regardless of
+   each element's own font-size (search/disclaimer/etc. each set a different one) */
 #fork-sidebar-search {
-    margin: 0.6em 1em;
+    display: block;
+    width: calc(100% - 2rem);
+    margin: 0.6em 1rem;
     padding: 0.4em 0.6em;
     background: transparent;
-    border: 1px solid rgba(128, 128, 128, 0.4);
+    border: 1px solid rgba(128, 128, 128, 0.3);
     border-radius: 4px;
     color: inherit;
     font-size: 0.95em;
@@ -77,13 +95,13 @@
 #fork-sidebar-tabs {
     display: flex;
     gap: 0.3em;
-    padding: 0 1em 0.4em;
+    padding: 0 1rem 0.4em;
     flex-wrap: wrap;
     flex: 0 0 auto;
 }
 #fork-sidebar-tabs button {
     background: transparent;
-    border: 1px solid rgba(128, 128, 128, 0.4);
+    border: 1px solid rgba(128, 128, 128, 0.3);
     color: inherit;
     border-radius: 999px;
     padding: 0.25em 0.7em;
@@ -98,7 +116,8 @@
 }
 
 #fork-sidebar-disclaimer {
-    margin: 0 1em 0.6em;
+    width: calc(100% - 2rem);
+    margin: 0 1rem 0.6em;
     padding: 0.6em 0.7em;
     font-size: 0.78em;
     line-height: 1.35;
@@ -111,7 +130,7 @@
 #fork-sidebar-disclaimer a { color: var(--link); }
 
 #fork-sidebar-progress {
-    padding: 0 1em 0.5em;
+    padding: 0 1rem 0.5em;
     font-size: 0.8em;
     opacity: 0.7;
     flex: 0 0 auto;
@@ -121,9 +140,9 @@
     display: flex;
     align-items: center;
     gap: 0.45em;
-    padding: 0 1em 0.6em;
+    padding: 0 1rem 0.6em;
     font-size: 0.8em;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
     flex: 0 0 auto;
 }
 .fork-swatch {
@@ -193,4 +212,6 @@
 
 @media screen and (max-width: 700px) {
     #fork-sidebar-toggle { left: 2%; top: auto; bottom: 3%; }
+    /* toggle moved down out of the way, so the donate button doesn't need to move over */
+    .paypal-button { left: 2%; }
 }
