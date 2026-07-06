@@ -74,10 +74,10 @@
     var sidebar = document.createElement("div");
     sidebar.id = "fork-sidebar";
     sidebar.innerHTML =
-        '<div id="fork-sidebar-header"><strong>Sections</strong>' +
-        '<button id="fork-sidebar-close" aria-label="Close">×</button></div>' +
+        '<div id="fork-sidebar-header"><strong>Sections</strong></div>' +
         '<div id="fork-sidebar-disclaimer">This is a fan-made quality-of-life fork, not the ' +
-        'original document. <a href="https://meditationbook.page/" target="_blank" rel="noopener">' +
+        'original document. All credit to "meditationstuff" and collaborators, as credited in the ' +
+        'document itself. <a href="https://meditationbook.page/" target="_blank" rel="noopener">' +
         "See the original here.</a></div>" +
         '<input id="fork-sidebar-search" type="search" placeholder="Filter sections…">' +
         '<div id="fork-sidebar-tabs">' +
@@ -98,13 +98,22 @@
 
     var toggleBtn = document.createElement("button");
     toggleBtn.id = "fork-sidebar-toggle";
-    toggleBtn.textContent = "☰ Sections";
+    toggleBtn.setAttribute("aria-label", "Toggle sections sidebar");
+    toggleBtn.innerHTML =
+        '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">' +
+        '<rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
+        '<line x1="9.5" y1="4" x2="9.5" y2="20" stroke="currentColor" stroke-width="1.6"/>' +
+        "</svg>";
     document.body.appendChild(toggleBtn);
 
-    function openSidebar() { sidebar.classList.add("fork-open"); }
-    function closeSidebar() { sidebar.classList.remove("fork-open"); }
-    toggleBtn.onclick = openSidebar;
-    document.getElementById("fork-sidebar-close").onclick = closeSidebar;
+    function setSidebarOpen(open) {
+        sidebar.classList.toggle("fork-open", open);
+        backdrop.classList.toggle("fork-open", open);
+        toggleBtn.classList.toggle("fork-open", open);
+    }
+    function closeSidebar() { setSidebarOpen(false); }
+    function toggleSidebar() { setSidebarOpen(!sidebar.classList.contains("fork-open")); }
+    toggleBtn.onclick = toggleSidebar;
     backdrop.onclick = closeSidebar;
     document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") closeSidebar();
