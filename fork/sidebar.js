@@ -71,14 +71,22 @@
     backdrop.id = "fork-sidebar-backdrop";
     document.body.appendChild(backdrop);
 
+    var SIDEBAR_ICON_SVG =
+        '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">' +
+        '<rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
+        '<line x1="9.5" y1="4" x2="9.5" y2="20" stroke="currentColor" stroke-width="1.6"/>' +
+        "</svg>";
+
     var sidebar = document.createElement("div");
     sidebar.id = "fork-sidebar";
     sidebar.innerHTML =
-        '<div id="fork-sidebar-header"><strong>Sections</strong></div>' +
+        '<div id="fork-sidebar-header">' +
+        '<button id="fork-sidebar-close" class="fork-icon-btn" aria-label="Close sections sidebar">' +
+        SIDEBAR_ICON_SVG + "</button>" +
+        "<strong>Sections</strong></div>" +
         '<div id="fork-sidebar-disclaimer">This is a fan-made quality-of-life fork, not the ' +
-        'original document. All credit to "meditationstuff" and collaborators, as credited in the ' +
-        'document itself. <a href="https://meditationbook.page/" target="_blank" rel="noopener">' +
-        "See the original here.</a></div>" +
+        '<a href="https://meditationbook.page/" target="_blank" rel="noopener">original document</a>. ' +
+        'All credit to "meditationstuff" and collaborators.</div>' +
         '<input id="fork-sidebar-search" type="search" placeholder="Filter sections…">' +
         '<div id="fork-sidebar-tabs">' +
         '<button data-tab="all" class="active">All</button>' +
@@ -98,22 +106,23 @@
 
     var toggleBtn = document.createElement("button");
     toggleBtn.id = "fork-sidebar-toggle";
-    toggleBtn.setAttribute("aria-label", "Toggle sections sidebar");
-    toggleBtn.innerHTML =
-        '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">' +
-        '<rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
-        '<line x1="9.5" y1="4" x2="9.5" y2="20" stroke="currentColor" stroke-width="1.6"/>' +
-        "</svg>";
+    toggleBtn.className = "fork-icon-btn";
+    toggleBtn.setAttribute("aria-label", "Open sections sidebar");
+    toggleBtn.innerHTML = SIDEBAR_ICON_SVG;
     document.body.appendChild(toggleBtn);
 
+    // the header's own close button is a normal in-flow child of the sidebar, so it
+    // can never overlap page content: it just slides on/off screen with the sidebar.
+    // the floating toggleBtn is only ever needed to open it, so it's hidden while open.
     function setSidebarOpen(open) {
         sidebar.classList.toggle("fork-open", open);
         backdrop.classList.toggle("fork-open", open);
-        toggleBtn.classList.toggle("fork-open", open);
+        toggleBtn.style.display = open ? "none" : "flex";
     }
     function closeSidebar() { setSidebarOpen(false); }
-    function toggleSidebar() { setSidebarOpen(!sidebar.classList.contains("fork-open")); }
-    toggleBtn.onclick = toggleSidebar;
+    function openSidebar() { setSidebarOpen(true); }
+    toggleBtn.onclick = openSidebar;
+    document.getElementById("fork-sidebar-close").onclick = closeSidebar;
     backdrop.onclick = closeSidebar;
     document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") closeSidebar();

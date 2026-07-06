@@ -2,11 +2,7 @@
    injected as-is into the built index.html; kept out of header.html/m.sh so upstream
    merges never touch this file. */
 
-#fork-sidebar-toggle {
-    position: fixed;
-    top: 4.5em;
-    left: 2%;
-    z-index: 10000;
+.fork-icon-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,12 +15,15 @@
     padding: 0;
     cursor: pointer;
     opacity: 0.85;
-    transition: left 0.2s ease, top 0.2s ease;
+    flex: 0 0 auto;
 }
-#fork-sidebar-toggle:hover { opacity: 1; }
-#fork-sidebar-toggle.fork-open {
-    top: 0.9em;
-    left: 0.9em;
+.fork-icon-btn:hover { opacity: 1; }
+
+#fork-sidebar-toggle {
+    position: fixed;
+    top: 4.5em;
+    left: 2%;
+    z-index: 10000;
 }
 
 #fork-sidebar-backdrop {
@@ -58,7 +57,8 @@
 #fork-sidebar-header {
     display: flex;
     align-items: center;
-    padding: 0.8em 1em 0.4em 3.4em;
+    gap: 0.6em;
+    padding: 0.8em 1em 0.4em;
     border-bottom: 1px solid rgba(128, 128, 128, 0.25);
     flex: 0 0 auto;
 }
