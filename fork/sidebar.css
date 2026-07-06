@@ -1,0 +1,199 @@
+/* fork feature styles: sidebar nav, favorites, read-tracking, reading list, color palettes.
+   injected as-is into the built index.html; kept out of header.html/m.sh so upstream
+   merges never touch this file. */
+
+#fork-sidebar-toggle {
+    position: fixed;
+    top: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    padding: 0.4em 0.9em;
+    font-size: 0.9em;
+    cursor: pointer;
+    opacity: 0.9;
+}
+#fork-sidebar-toggle:hover { opacity: 1; }
+
+#fork-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 9998;
+    display: none;
+}
+#fork-sidebar.fork-open ~ #fork-sidebar-backdrop { display: block; }
+
+#fork-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: min(360px, 88vw);
+    background: var(--bg);
+    color: var(--text);
+    border-right: 1px solid rgba(128, 128, 128, 0.35);
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.92rem;
+}
+#fork-sidebar.fork-open { transform: translateX(0); }
+
+#fork-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8em 1em 0.4em;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    flex: 0 0 auto;
+}
+#fork-sidebar-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.4em;
+    cursor: pointer;
+    line-height: 1;
+}
+
+#fork-sidebar-search {
+    margin: 0.6em 1em;
+    padding: 0.4em 0.6em;
+    background: transparent;
+    border: 1px solid rgba(128, 128, 128, 0.4);
+    border-radius: 4px;
+    color: inherit;
+    font-size: 0.95em;
+    flex: 0 0 auto;
+}
+
+#fork-sidebar-tabs {
+    display: flex;
+    gap: 0.3em;
+    padding: 0 1em 0.4em;
+    flex-wrap: wrap;
+    flex: 0 0 auto;
+}
+#fork-sidebar-tabs button {
+    background: transparent;
+    border: 1px solid rgba(128, 128, 128, 0.4);
+    color: inherit;
+    border-radius: 999px;
+    padding: 0.25em 0.7em;
+    font-size: 0.85em;
+    cursor: pointer;
+    opacity: 0.75;
+}
+#fork-sidebar-tabs button.active {
+    opacity: 1;
+    border-color: var(--link);
+    color: var(--link);
+}
+
+#fork-add-favs-to-reading {
+    margin: 0 1em 0.5em;
+    font-size: 0.8em;
+    padding: 0.3em 0.6em;
+    background: transparent;
+    color: inherit;
+    border: 1px dashed rgba(128, 128, 128, 0.5);
+    border-radius: 4px;
+    cursor: pointer;
+    display: none;
+    flex: 0 0 auto;
+    align-self: flex-start;
+    margin-left: 1em;
+}
+
+#fork-sidebar-progress {
+    padding: 0 1em 0.5em;
+    font-size: 0.8em;
+    opacity: 0.7;
+    flex: 0 0 auto;
+}
+
+#fork-palette-picker {
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: 0 1em 0.6em;
+    font-size: 0.8em;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    flex: 0 0 auto;
+}
+.fork-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+}
+.fork-swatch.active { border-color: currentColor; }
+.fork-swatch-default { background: linear-gradient(135deg, #fff 50%, #121212 50%); }
+.fork-swatch-sepia { background: #d9a066; }
+.fork-swatch-slate { background: #2b6cb0; }
+.fork-swatch-forest { background: #2f6b3a; }
+.fork-swatch-rose { background: #b1466f; }
+
+#fork-toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.4em 0 2em;
+    overflow-y: auto;
+    flex: 1 1 auto;
+}
+.fork-toc-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0.25em 1em;
+}
+.fork-toc-item:hover { background: rgba(128, 128, 128, 0.12); }
+.fork-toc-item.fork-current { background: rgba(128, 128, 128, 0.2); }
+.fork-toc-item.fork-level-h2 { padding-left: 1.8em; font-size: 0.93em; }
+.fork-toc-item.fork-level-h3 { padding-left: 2.6em; font-size: 0.88em; opacity: 0.9; }
+
+.fork-fav-btn, .fork-read-btn, .fork-list-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.95em;
+    padding: 0 0.15em;
+    opacity: 0.8;
+    flex: 0 0 auto;
+}
+.fork-fav-btn:hover, .fork-read-btn:hover, .fork-list-btn:hover { opacity: 1; }
+
+.fork-toc-link {
+    color: inherit;
+    text-decoration: none;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.fork-toc-link:hover { text-decoration: underline; }
+
+.fork-empty-note {
+    padding: 1em;
+    opacity: 0.6;
+    font-size: 0.85em;
+}
+
+@media print {
+    #fork-sidebar-toggle, #fork-sidebar, #fork-sidebar-backdrop { display: none !important; }
+}
+
+@media screen and (max-width: 700px) {
+    #fork-sidebar-toggle { left: 2%; transform: none; top: auto; bottom: 3%; }
+}
